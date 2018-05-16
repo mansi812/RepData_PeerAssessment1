@@ -1,50 +1,62 @@
----
-title: "Module 5 Project1"
-output: github_document
----
+Module 5 Project1
+================
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Load and preprocess data
+------------------------
 
-
-## Load and preprocess data
-
-
-```{r data}
+``` r
 activity<-read.csv(file="activity.csv",header=TRUE)
 ```
 
-## What is the mean total number of steps taken per day
+What is the mean total number of steps taken per day
+----------------------------------------------------
 
-
-```{r steps mean}
+``` r
 #calculate the total number of steps taken per day
 totalSteps<-aggregate(steps~date,activity,FUN=sum)
 #Histogram of total number of steps
 hist(totalSteps$steps,main="Total steps per day",xlab="Number of steps")
+```
 
+![](PA1_template_files/figure-markdown_github/steps%20mean-1.png)
+
+``` r
 #Calculate the mean and median of total steps per day
 meanSteps<-mean(totalSteps$steps,na.rm=TRUE)
 medsteps<-median(totalSteps$steps,na.rm=TRUE)
 meanSteps
+```
+
+    ## [1] 10766.19
+
+``` r
 medsteps
 ```
 
-##What is the average daily activity pattern
+    ## [1] 10765
 
-```{r daily pattern}
+What is the average daily activity pattern
+------------------------------------------
+
+``` r
 averageintervaldata<-aggregate(steps~interval,activity,mean)
 plot(x= averageintervaldata$interval, y= averageintervaldata$steps, type = "l")
+```
 
+![](PA1_template_files/figure-markdown_github/daily%20pattern-1.png)
+
+``` r
 #Calculate the interval which contains maximum number of steps
 maxInt<-averageintervaldata[which.max(averageintervaldata$steps),]
 maxInt$interval
 ```
 
-##Inputting missing values
+    ## [1] 835
 
-```{r missing values}
+Inputting missing values
+------------------------
+
+``` r
 missingvalues<-is.na(activity$steps)
 
 #Create a new dataset that has missing values
@@ -57,18 +69,29 @@ activity$steps))
 
 impSteps<-aggregate(steps~date,imp_activity,FUN=sum)
 hist(impSteps$steps,main="Imputed number of steps per day",xlab="number of steps")
+```
 
+![](PA1_template_files/figure-markdown_github/missing%20values-1.png)
+
+``` r
 #mean and median with filled in data
 newmean<-mean(impSteps$steps)
 newmedian<-median(impSteps$steps)
 newmean
-newmedian
-
 ```
 
-##Are there differences in activity patterns between weekdays and weekends?
+    ## [1] 10766.19
 
-```{r activity pattern}
+``` r
+newmedian
+```
+
+    ## [1] 10766.19
+
+Are there differences in activity patterns between weekdays and weekends?
+-------------------------------------------------------------------------
+
+``` r
 DayType <- function(date) {
   day <- weekdays(date)
   if (day %in% c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'))
@@ -89,10 +112,6 @@ ggplot(data=meanstepsbyDay,aes(x=interval,y=steps))+
   ggtitle("Average Daily Activity Pattern") +
   xlab("5-minute Interval") +
   ylab("Average Number of Steps")
+```
 
-
-
-
-
-
-
+![](PA1_template_files/figure-markdown_github/activity%20pattern-1.png)
